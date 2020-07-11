@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
         exit(1);
     } else if (retval) {
         int ret = recvfrom(sockfd,(void *)&response, sizeof(response), 0, (struct sockaddr *)&server, &len);
-        if (ret != sizeof(response) || response.type) {
+        if (ret != sizeof(response) || response.type) {//test
             DBG(RED"Error"NONE":the game server refuesd your login.\n%s\n",response.msg);
             exit(1);                                                    
         } else {
