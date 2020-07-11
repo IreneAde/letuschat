@@ -91,40 +91,39 @@ int main(int argc, char **argv) {
     } else if (retval) {
         int ret = recvfrom(sockfd,(void *)&response, sizeof(response), 0, (struct sockaddr *)&server, &len);
         if (ret != sizeof(response) || response.type) {//test
-            DBG(RED"Error"NONE":the game server refuesd your login.\n%s\n",response.msg);
+            DBG(RED"Error"NONE":the game server refuesd your login.\n\tThis may be helpful:%s\n",response.msg);
             exit(1);                                                    
-        } else {
+        } 
+
+    }else {
             DBG(RED"Error"NONE":the game server is out of service\n");
             exit(1);
         }
 
-        DBG(GREEN"Server"NONE":%s\n",response.msg);
-
-        connect(sockfd, (struct sockaddr *)&server, len);
-
-        pthread_t recv_t;//新的线程
-        pthread_create(&recv_t, NULL, do_recv, NULL);
-        //char buff[512];
-        //sprintf(buff,"hahahaha!");
-        //send(sockfd, buff, strlen(buff),0);
-        //recv(sockfd, buff, sizeof(buff),0);
-        //DBG(RED"Server Info"NONE" : %s\n",buff);
-        signal(SIGINT, logout);
-        struct ChatMsg msg;
-        while(1) {
-            bzero(&msg, sizeof(msg));
-            msg.type = CHAT_WALL;
-            printf(RED"Please input:\n"NONE);
-            scanf("%[^\n]s", msg.msg);
-            getchar();
-            if (strlen(msg.msg)) {
-                if (msg.msg[0] == '@')
-                    msg.type = CHAT_MSG;
-                if (msg.msg[0] == '#')
-                    msg.type = CHAT_FUNC;
-                send(sockfd,(void*)&msg,sizeof(msg),0);
-            }
+    DBG(GREEN"Server"NONE":%s\n",response.msg);
+    connect(sockfd, (struct sockaddr *)&server, len);
+    pthread_t recv_t;//新的线程
+    pthread_create(&recv_t, NULL, do_recv, NULL);
+    //char buff[512];
+    //sprintf(buff,"hahahaha!");
+    //send(sockfd, buff, strlen(buff),0);
+    //recv(sockfd, buff, sizeof(buff),0);
+    //DBG(RED"Server Info"NONE" : %s\n",buff);
+    signal(SIGINT, logout);
+    struct ChatMsg msg;
+    while(1) {
+        bzero(&msg, sizeof(msg));
+        msg.type = CHAT_WALL;
+        printf(RED"Please input:\n"NONE);
+        scanf("%[^\n]s", msg.msg);
+        getchar();
+        if (strlen(msg.msg)) {
+            if (msg.msg[0] == '@')
+                msg.type = CHAT_MSG;
+            if (msg.msg[0] == '#')
+                msg.type = CHAT_FUNC;
+            send(sockfd,(void*)&msg,sizeof(msg),0);
         }
-    }                                                                                
+    }                                                                            
     return 0;
 }
