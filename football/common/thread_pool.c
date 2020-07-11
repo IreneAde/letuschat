@@ -22,6 +22,30 @@ void send_all(struct ChatMsg *msg)
     }
 }
 
+void show_members(struct User* user)
+{
+    struct ChatMsg msg;
+    bzero(&msg, sizeof(msg));
+    msg.type = CHAT_FUNC;
+
+    sprintf(msg.msg, BLUE"目前在线的好友有：:"NONE);
+    send_to(&user.name,&msg, user->fd);
+
+    for (int i = 0; bteam[i].online; i++)
+    {
+        sprintf(msg.msg, "%s", bteam[i].name);
+        send_to(&user.name,&msg, user->fd);
+    }
+
+    for (int i = 0; rteam[i].online; i++)
+    {
+        sprintf(msg.msg, "%s", rteam[i].name);
+        send_to(&user.name,&msg, user->fd);
+    }
+    
+    return;
+}
+
 void send_to(char *to, struct ChatMsg *msg, int fd)
 {
     int flag = 0;
