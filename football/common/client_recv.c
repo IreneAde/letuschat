@@ -15,6 +15,16 @@ void *do_recv(void *arg)
         } else if (msg.type & CHAT_FIN) {
             printf(L_RED"Server Info"NONE"Server Down!\n");
             exit(1);
+        }else if(msg.type & CHAT_FUNC){
+            switch (msg.msg[1])
+        {
+            case'1':
+                show_members(user);
+                break;
+            default:
+                break;
         }
+    }
+        
     }
 }
